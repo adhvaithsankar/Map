@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+        <html>
+           <head>
+              <title>OSM and Leaflet</title>
+              <link rel = "stylesheet" href = "http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
+           </head><body>
+              <div id = "map" style = "width: 900px; height: 580px"></div><script src = "http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+              <input type="text" id="searchBar" placeholder="Search by title" >
+              <button onclick="filterMarkers()">Search</button>
+              <script>
+
+
+
+
+
+
+
+
+                 // Creating map options
+                 var mapOptions = {
+                    center: [13.0827, 80.2707],
+                    zoom: 10
+                 }
+                 
+                 // Creating a map object
+                 var map = new L.map('map', mapOptions);
+                 
+                 // Creating a Layer object
+                 var layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+                 
+                 // Adding layer to the map
+                 map.addLayer(layer);
+                
+
+
+                 // Creating an array of latitude and longitude with the fish Hotspot available in that area
+                 var locations = [
+                    [[13.210534384132387, 80.48446655273438],["Salmon"]],
+                    [[13.039345099988836,80.518798828125],["Tuna"]],
+                    [[13.095529720741494, 80.419921875],["Shark"]],
+                    [[12.973780249064331, 80.44601440429686],["Swordfish"]]
+                 ];
+
+
+
+
+
+               // Icon options
+         var iconOptions = {
+            iconUrl: './Fish_trap.png',
+            iconSize: [50, 50]
+         }
+         // Creating a custom icon
+         var customIcon = L.icon(iconOptions);
+         
+         // Creating Marker Options
+
+
+               // Creating multiple markers from the array
+               for (var i = 0; i < locations.length; i++) {
+                  var fishName = locations[i][1].toString(); // Convert the fish name to a string
+                  console.log(locations[i][1]);
+                  var marker = new L.Marker(locations[i][0],{title: fishName, icon: customIcon});
+                  marker.bindPopup(fishName); // Set the fish name as the marker title
+                  marker.addTo(map);
+               }
+               
+
+               
+               
+
+               //creating a usermarker for the user to input the values of the fish
+               var userMarker = new L.Marker();
+               map.on('click', function(e) {
+                  userMarker.setLatLng(e.latlng);
+                  userMarker.addTo(map);
+                  console.log(e.latlng);
+               });
+
+               // Creating a button to close the user marker
+               var closeButton = L.DomUtil.create('button', 'close-button');
+               closeButton.innerHTML = 'Close Marker';
+               closeButton.onclick = function() {
+                  map.removeLayer(userMarker);
+               };
+               document.body.appendChild(closeButton);
+
+
+
+
+
+               function filterMarkers() {
+                  var input = document.getElementById("searchBar").value.toLowerCase();
+                  var markers = document.getElementsByClassName("leaflet-marker-icon");
+                  var shadow = document.getElementsByClassName("leaflet-marker-shadow");
+                  for (var i = 0; i < markers.length; i++) {
+                     var marker = markers[i];
+                     console.log(marker.getAttribute("title"));
+                     var title = marker.getAttribute("title").toLowerCase();
+                     
+                     if (title.includes(input)) {
+                        marker.style.display = "block";
+                        //shadow.style.display = "block";
+                     } else {
+                        marker.style.display = "none";
+                        //shadow.style.display = "none";
+                     }
+                  }
+               }
+
+               
+
+              </script>
+           </body>
+           
+        </html>
+
+              </script>
+           </body>
+           
+        </html>
